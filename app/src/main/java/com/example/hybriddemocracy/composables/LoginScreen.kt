@@ -3,12 +3,13 @@ package com.example.hybriddemocracy.composables
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,12 +24,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.hybriddemocracy.R
-import com.example.hybriddemocracy.ui.theme.HybridDemocracyTheme
 
 @Composable
 fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
@@ -47,7 +46,7 @@ fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold
             ),
-            modifier = modifier.padding(vertical = 40.dp)
+            modifier = modifier.padding(vertical = 80.dp)
         )
 
         OutlinedTextField(
@@ -80,6 +79,19 @@ fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
                 )
         )
 
+        Button(
+            onClick = {
+                navController.navigate("main")
+            },
+            colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.purple_700)),
+            modifier = Modifier
+                .padding(top = 16.dp)
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp)
+        ) {
+            Text(text = "Login".uppercase())
+        }
+
         Text(
             text = "Don't have account? Register via:".uppercase(),
             style = TextStyle(
@@ -95,9 +107,6 @@ fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
             contentDescription = "Diia",
             modifier = Modifier
                 .padding(8.dp)
-                .clickable {
-                    navController.navigate("main")
-                }
         )
     }
 }
