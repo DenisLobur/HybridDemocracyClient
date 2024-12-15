@@ -25,9 +25,9 @@ import java.time.format.DateTimeFormatter
 import kotlin.random.Random
 
 @Composable
-fun BillItem(modifier: Modifier = Modifier) {
+fun BillItem(text: String, modifier: Modifier = Modifier) {
 
-    val text by remember { mutableStateOf("Bill No. ${rndNum()}") }
+    val innerText by remember { mutableStateOf(text) }
     val date by remember { mutableStateOf(rndDate()) }
     val isChecked by remember { mutableStateOf(rndCheck()) }
 
@@ -41,7 +41,7 @@ fun BillItem(modifier: Modifier = Modifier) {
             )
     ) {
         Column(modifier = modifier.align(Alignment.CenterVertically)) {
-            Text(text = text, modifier = modifier)
+            Text(text = innerText, modifier = modifier)
             Text(text = date, modifier = modifier)
         }
 

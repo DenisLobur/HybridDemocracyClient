@@ -69,7 +69,7 @@ fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
             onValueChange = { newText ->
                 passwordText = newText
             },
-            placeholder = { Text(text = "Passord") },
+            placeholder = { Text(text = "Password") },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 16.dp, start = 20.dp, end = 20.dp, bottom = 16.dp)
@@ -110,13 +110,3 @@ fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
         )
     }
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun LoginScreenPreview() {
-//    HybridDemocracyTheme {
-//        LoginScreen(navController = NavController(
-//            context = TODO()
-//        ))
-//    }
-//}

@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.hybriddemocracy.composables.views.BillItem
+import kotlin.random.Random
 
 @Composable
 fun MainScreen(navController: NavController, modifier: Modifier = Modifier) {
@@ -30,12 +31,12 @@ fun MainScreen(navController: NavController, modifier: Modifier = Modifier) {
             modifier = modifier.padding(top = 80.dp).padding(horizontal = 20.dp)
         )
 
-        val bills = listOf<String>("", "", "", "", "", "")
+        val bills = listOf("Bill No. ${rndNum()}", "Bill No. ${rndNum()}", "Bill No. ${rndNum()}", "Bill No. ${rndNum()}", "Bill No. ${rndNum()}", "Bill No. ${rndNum()}")
 
         LazyColumn {
             items(items = bills) { bill ->
                 BillItem(
-//                    text = bill,
+                    text = bill,
                     modifier = Modifier
                         .clickable {
                             navController.navigate("detail/$bill")
@@ -46,4 +47,6 @@ fun MainScreen(navController: NavController, modifier: Modifier = Modifier) {
         }
     }
 }
+
+private fun rndNum(): Int = Random.nextInt(100000, 1000000)
 
