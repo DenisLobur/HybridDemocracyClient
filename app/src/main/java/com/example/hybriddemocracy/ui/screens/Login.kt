@@ -1,4 +1,4 @@
-package com.example.hybriddemocracy.composables
+package com.example.hybriddemocracy.ui.screens
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -27,10 +27,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.hybriddemocracy.R
 
 @Composable
-fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
+fun Login() {
+//    val viewModel: UserViewModel = hiltViewModel<UserViewModel>()
+    val navController = rememberNavController()
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.Center,
@@ -46,7 +49,7 @@ fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold
             ),
-            modifier = modifier.padding(vertical = 80.dp)
+            modifier = Modifier.padding(vertical = 80.dp)
         )
 
         OutlinedTextField(
@@ -82,6 +85,9 @@ fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
         Button(
             onClick = {
                 navController.navigate("main")
+//                viewModel.getUserById("user_id") { user ->
+                    // Handle the user data
+//                }
             },
             colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.purple_700)),
             modifier = Modifier
@@ -99,7 +105,7 @@ fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold
             ),
-            modifier = modifier.padding(vertical = 20.dp)
+            modifier = Modifier.padding(vertical = 20.dp)
         )
 
         Image(

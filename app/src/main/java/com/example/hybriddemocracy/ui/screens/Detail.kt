@@ -1,4 +1,4 @@
-package com.example.hybriddemocracy.composables
+package com.example.hybriddemocracy.ui.screens
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
@@ -38,7 +38,7 @@ import androidx.navigation.NavController
 import com.example.hybriddemocracy.R
 
 @Composable
-fun DetailScreen(navController: NavController, billName: String, modifier: Modifier = Modifier) {
+fun Detail(navController: NavController, billName: String, modifier: Modifier = Modifier) {
     val rating = remember { mutableIntStateOf(0) }
     var feedback by remember { mutableStateOf("") }
     var isInterpreted by remember { mutableStateOf(false) }
@@ -78,6 +78,9 @@ fun DetailScreen(navController: NavController, billName: String, modifier: Modif
             onClick = {
                 //TODO: Interpret with AI
                 isInterpreted = true
+//                viewModel.getUserById("user_id") { user ->
+                    // Handle the user data
+//                }
             },
             colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.purple_700)),
             modifier = Modifier

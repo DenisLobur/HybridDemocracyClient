@@ -1,4 +1,4 @@
-package com.example.hybriddemocracy.composables
+package com.example.hybriddemocracy.ui.screens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -18,7 +18,7 @@ import com.example.hybriddemocracy.composables.views.BillItem
 import kotlin.random.Random
 
 @Composable
-fun MainScreen(navController: NavController, modifier: Modifier = Modifier) {
+fun Home(navController: NavController, modifier: Modifier = Modifier) {
 
     Column() {
         Text(
@@ -40,6 +40,9 @@ fun MainScreen(navController: NavController, modifier: Modifier = Modifier) {
                     modifier = Modifier
                         .clickable {
                             navController.navigate("detail/$bill")
+//                            viewModel.getUserById("user_id") { user ->
+                                // Handle the user data
+//                            }
                         }
                         .padding(16.dp)
                 )
