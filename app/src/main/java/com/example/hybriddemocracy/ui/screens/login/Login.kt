@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -37,8 +38,10 @@ fun Login() {
     val viewModel: LoginViewModel = hiltViewModel<LoginViewModel>()
     val navController = rememberNavController()
 
-    val token by viewModel.token.collectAsState()
-    Log.d("denys", "token: $token")
+//    val token by viewModel.token.collectAsState()
+//    Log.d("denys", "token: $token")
+    val sayHello by viewModel.sayHello.collectAsState()
+    Log.d("denys", "sayHello: $sayHello")
 
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -117,6 +120,9 @@ fun Login() {
             contentDescription = "Diia",
             modifier = Modifier
                 .padding(8.dp)
+                .clickable {
+                    viewModel.sayHello()
+                }
         )
     }
 }

@@ -4,6 +4,7 @@ import com.example.hybriddemocracy.data.datasource.remote.ApiService
 import com.example.hybriddemocracy.data.model.User
 import com.example.hybriddemocracy.data.model.request.AuthRequest
 import com.example.hybriddemocracy.data.model.response.AuthResponse
+import com.example.hybriddemocracy.data.model.response.HelloResponse
 import com.example.hybriddemocracy.utils.network.DataState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -18,6 +19,16 @@ class RepositoryImpl @Inject constructor(
         try {
             val token = api.authenticate(AuthRequest(username, password))
             emit(DataState.Success(token))
+        } catch (e: Exception) {
+            emit(DataState.Error(e))
+        }
+    }
+
+    override suspend fun sayHello(): Flow<DataState<HelloResponse>> = flow {
+        emit(DataState.Loading)
+        try {
+            val hello = api.sayHello()
+            emit(DataState.Success(hello))
         } catch (e: Exception) {
             emit(DataState.Error(e))
         }
