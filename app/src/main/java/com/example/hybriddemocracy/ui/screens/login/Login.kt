@@ -1,5 +1,6 @@
-package com.example.hybriddemocracy.ui.screens
+package com.example.hybriddemocracy.ui.screens.login
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -13,6 +14,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,14 +28,18 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.hybriddemocracy.R
 
 @Composable
 fun Login() {
-//    val viewModel: UserViewModel = hiltViewModel<UserViewModel>()
+    val viewModel: LoginViewModel = hiltViewModel<LoginViewModel>()
     val navController = rememberNavController()
+
+    val token by viewModel.token.collectAsState()
+    Log.d("denys", "token: $token")
+
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.Center,
@@ -84,10 +90,8 @@ fun Login() {
 
         Button(
             onClick = {
-                navController.navigate("main")
-//                viewModel.getUserById("user_id") { user ->
-                    // Handle the user data
-//                }
+//                navController.navigate("main")
+                viewModel.authorize(username = emailText, password = passwordText)
             },
             colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.purple_700)),
             modifier = Modifier

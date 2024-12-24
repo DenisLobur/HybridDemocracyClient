@@ -3,9 +3,9 @@ package com.example.hybriddemocracy
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-//import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.activity.viewModels
-import com.example.hybriddemocracy.ui.screens.Login
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.example.hybriddemocracy.ui.screens.login.Login
 import com.example.hybriddemocracy.ui.screens.activity.MainActivityViewModel
 import com.example.hybriddemocracy.ui.theme.HybridDemocracyTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -16,13 +16,12 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        installSplashScreen().apply {
-//            setKeepOnScreenCondition { splashViewModel.isLoading.value }
-//        }
+        installSplashScreen().apply {
+            setKeepOnScreenCondition { splashViewModel.isLoading.value }
+        }
         setContent {
             HybridDemocracyTheme {
-            Login()
-            //MyApp()
+                Login()
             }
         }
     }

@@ -58,13 +58,17 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation("androidx.work:work-runtime:2.10.0")
+    implementation("androidx.multidex:multidex:2.0.1")
 
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.1")
+    implementation("com.google.code.gson:gson:2.11.0")
     implementation(libs.androidx.navigation.compose)
 
     // Additional libraries
-    implementation("androidx.core:core-splashscreen")
+    implementation("androidx.core:core-splashscreen:1.0.1")
 
     // Dependency Injection
     implementation("com.google.dagger:hilt-android:2.52")
