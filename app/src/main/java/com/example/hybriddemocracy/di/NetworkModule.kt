@@ -2,6 +2,8 @@ package com.example.hybriddemocracy.di
 
 import com.example.hybriddemocracy.data.datasource.remote.ApiService
 import com.example.hybriddemocracy.data.datasource.remote.ApiUrl
+import com.example.hybriddemocracy.utils.security.AuthInterceptor
+import com.example.hybriddemocracy.utils.security.TokenManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -38,14 +40,14 @@ object NetworkModule {
      */
     @Singleton
     @Provides
-    fun provideOkHttpClient(loggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
+    fun provideOkHttpClient(tokenManager: TokenManager): OkHttpClient {
         val okHttpClient = OkHttpClient().newBuilder()
 
         okHttpClient.callTimeout(40, TimeUnit.SECONDS)
         okHttpClient.connectTimeout(40, TimeUnit.SECONDS)
         okHttpClient.readTimeout(40, TimeUnit.SECONDS)
         okHttpClient.writeTimeout(40, TimeUnit.SECONDS)
-        okHttpClient.addInterceptor(loggingInterceptor)
+        okHttpClient.addInterceptor(AuthInterceptor(tokenManager))
         okHttpClient.build()
         return okHttpClient.build()
     }

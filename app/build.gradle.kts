@@ -60,6 +60,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation("androidx.work:work-runtime:2.10.0")
     implementation("androidx.multidex:multidex:2.0.1")
+    implementation("androidx.security:security-crypto:1.0.0")
 
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
