@@ -30,18 +30,26 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavController
 import com.example.hybriddemocracy.R
+import com.example.hybriddemocracy.navigation.Screen
+import com.example.hybriddemocracy.navigation.currentRoute
 
 @Composable
-fun Login() {
+fun Login(
+    navController: NavController
+) {
     val viewModel: LoginViewModel = hiltViewModel<LoginViewModel>()
-    val navController = rememberNavController()
 
-//    val token by viewModel.token.collectAsState()
+    val token by viewModel.token.collectAsState()
 //    Log.d("denys", "token: $token")
     val sayHello by viewModel.sayHello.collectAsState()
     Log.d("denys", "sayHello: $sayHello")
+
+
+//    if (token != null) {
+//        navController.navigate("home")
+//    }
 
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -50,6 +58,8 @@ fun Login() {
     ) {
         var emailText by remember { mutableStateOf("") }
         var passwordText by remember { mutableStateOf("") }
+
+        val activeScreen = currentRoute(navController)
 
         Text(
             text = "Welcome to Hybrid Democracy".uppercase(),
@@ -93,8 +103,13 @@ fun Login() {
 
         Button(
             onClick = {
-//                navController.navigate("main")
-                viewModel.authorize(username = emailText, password = passwordText)
+                navController.navigate(Screen.Home.route) {
+                    popUpTo(navController.graph.startDestinationId) {
+                        inclusive = true
+                    }
+                }
+//                Log.d("denys", "email: $emailText, password: $passwordText")
+//                viewModel.authorize(email = emailText, password = passwordText)
             },
             colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.purple_700)),
             modifier = Modifier

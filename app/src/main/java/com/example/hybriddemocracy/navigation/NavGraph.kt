@@ -1,22 +1,29 @@
 package com.example.hybriddemocracy.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
-import com.example.hybriddemocracy.ui.screens.Detail
-import com.example.hybriddemocracy.ui.screens.Home
+import com.example.hybriddemocracy.R
+import com.example.hybriddemocracy.ui.screens.detail.Detail
+import com.example.hybriddemocracy.ui.screens.home.Home
 import com.example.hybriddemocracy.ui.screens.login.Login
 
 @Composable
-fun Navigation(
+fun NavGraph(
     navController: NavHostController
 ) {
     NavHost(navController, startDestination = Screen.Login.route) {
         composable(Screen.Login.route) {
-            Login()
+            Login(
+                navController = navController,
+            )
         }
         composable(Screen.Home.route) {
             Home(
@@ -35,4 +42,22 @@ fun Navigation(
             )
         }
     }
+}
+
+@Composable
+fun navigationTitle(navController: NavController): String {
+    return when (currentRoute(navController)) {
+        Screen.Login.route -> stringResource(id = R.string.login)
+        Screen.Home.route -> stringResource(id = R.string.home)
+        Screen.Detail.route -> stringResource(id = R.string.detail)
+        else -> {
+            stringResource(R.string.app_name)
+        }
+    }
+}
+
+@Composable
+fun currentRoute(navController: NavController): String? {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    return navBackStackEntry?.destination?.route?.substringBeforeLast("/")
 }

@@ -26,9 +26,9 @@ class LoginViewModel @Inject constructor(private val tokenManager: TokenManager,
     private val _isLoading = MutableStateFlow<Boolean>(false)
     val isLoading get() = _isLoading.asStateFlow()
 
-    fun authorize(username: String, password: String) {
+    fun authorize(email: String, password: String) {
         viewModelScope.launch {
-            repo.authenticate(username, password).onEach {
+            repo.authenticate(email, password).onEach {
                 when (it) {
                     is DataState.Loading -> {
                         _isLoading.value = true
@@ -36,6 +36,7 @@ class LoginViewModel @Inject constructor(private val tokenManager: TokenManager,
 
                     is DataState.Success -> {
                         val token = it.data.jwt
+                        _token.value = token
                         tokenManager.saveToken(token)
                         _isLoading.value = false
                     }

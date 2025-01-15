@@ -1,4 +1,4 @@
-package com.example.hybriddemocracy.ui.screens
+package com.example.hybriddemocracy.ui.screens.home
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column

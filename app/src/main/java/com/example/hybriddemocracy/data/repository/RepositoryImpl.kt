@@ -14,10 +14,10 @@ class RepositoryImpl @Inject constructor(
     private val api: ApiService
 ) : Repository {
 
-    override suspend fun authenticate(username: String, password: String): Flow<DataState<AuthResponse>> = flow {
+    override suspend fun authenticate(email: String, password: String): Flow<DataState<AuthResponse>> = flow {
         emit(DataState.Loading)
         try {
-            val token = api.authenticate(AuthRequest(username, password))
+            val token = api.authenticate(AuthRequest(email, password))
             emit(DataState.Success(token))
         } catch (e: Exception) {
             emit(DataState.Error(e))

@@ -1,4 +1,4 @@
-package com.example.hybriddemocracy.ui.screens
+package com.example.hybriddemocracy.ui.screens.detail
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
@@ -144,7 +144,7 @@ fun Detail(navController: NavController, billName: String, modifier: Modifier = 
         Button(
             onClick = {
                 //TODO: Send feedback to BE
-                navController.popBackStack()
+                //navController.popBackStack()
             },
             colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.purple_700)),
             modifier = Modifier
