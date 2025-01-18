@@ -34,7 +34,7 @@ fun BillItem(text: String, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp)
+//            .padding(horizontal = 20.dp)
             .border(
                 BorderStroke(1.dp, colorResource(id = R.color.purple_700)),
                 RoundedCornerShape(4.dp)

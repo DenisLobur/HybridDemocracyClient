@@ -19,6 +19,6 @@ sealed class Screen(
     val objectPath: String = ""
 ) {
     object Login : Screen("login")
-    object Home : Screen("home")
+    object Home : Screen("home", objectName = "email", objectPath = "/{email}")
     object Detail : Screen("detail", objectName = "billName", objectPath = "/{billName}")
 }

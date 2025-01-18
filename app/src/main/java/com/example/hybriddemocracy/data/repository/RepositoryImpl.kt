@@ -38,10 +38,10 @@ class RepositoryImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override suspend fun getUserById(userId: String): Flow<DataState<User>> = flow {
+    override suspend fun getUserByEmail(email: String): Flow<DataState<User>> = flow {
         emit(DataState.Loading)
         try {
-            val user = api.getUserById(userId)
+            val user = api.getUserByEmail(email)
             emit(DataState.Success(user))
         } catch (e: Exception) {
             emit(DataState.Error(e))

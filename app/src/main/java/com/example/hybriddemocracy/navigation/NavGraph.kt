@@ -19,16 +19,25 @@ import com.example.hybriddemocracy.ui.screens.login.Login
 fun NavGraph(
     navController: NavHostController
 ) {
-    NavHost(navController, startDestination = Screen.Login.route) {
+    NavHost(navController, startDestination = Screen.Login.route) { // Revert to Login.route
         composable(Screen.Login.route) {
             Login(
                 navController = navController,
             )
         }
-        composable(Screen.Home.route) {
-            Home(
-                navController = navController
-            )
+        composable(
+            Screen.Home.route.plus(Screen.Home.objectPath),
+            arguments = listOf(navArgument(Screen.Home.objectName) {
+                type = NavType.StringType
+            })
+        ) {
+            val email = it.arguments?.getString(Screen.Home.objectName)
+            email?.let {
+                Home(
+                    navController = navController,
+                    email = email
+                )
+            }
         }
         composable(
             Screen.Detail.route.plus(Screen.Detail.objectPath),

@@ -94,7 +94,7 @@ fun Login(
         Button(
             onClick = {
                 viewModel.authorize(email = emailText.trim(), password = passwordText.trim()) {
-                    navController.navigate(Screen.Home.route) {
+                    navController.navigate(Screen.Home.route.plus("/$emailText")) {
                         popUpTo(navController.graph.startDestinationId) {
                             inclusive = true
                         }

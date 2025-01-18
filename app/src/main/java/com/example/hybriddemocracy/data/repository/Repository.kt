@@ -10,5 +10,5 @@ interface Repository {
     suspend fun authenticate(username: String, password: String): Flow<DataState<AuthResponse>> // Get token
     suspend fun sayHello(): Flow<DataState<HelloResponse>> // Say hello
     suspend fun login(email: String, password: String): Flow<DataState<User>>
-    suspend fun getUserById(userId: String): Flow<DataState<User>>
+    suspend fun getUserByEmail(email: String): Flow<DataState<User>>
 }

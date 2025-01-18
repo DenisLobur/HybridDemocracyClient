@@ -23,6 +23,6 @@ interface ApiService {
     @Headers(
         "Accept: application/json"
     )
-    @GET("users/{id}")
-    suspend fun getUserById(@Path("id") id: String): User
+    @GET("citizens/email/{email}")
+    suspend fun getUserByEmail(@Path("email") email: String): User
 }
