@@ -1,10 +1,10 @@
 package com.example.hybriddemocracy.data.repository
 
 import com.example.hybriddemocracy.data.datasource.remote.ApiService
+import com.example.hybriddemocracy.data.model.Bill
 import com.example.hybriddemocracy.data.model.User
 import com.example.hybriddemocracy.data.model.request.AuthRequest
 import com.example.hybriddemocracy.data.model.response.AuthResponse
-import com.example.hybriddemocracy.data.model.response.HelloResponse
 import com.example.hybriddemocracy.utils.network.DataState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -24,11 +24,11 @@ class RepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun sayHello(): Flow<DataState<HelloResponse>> = flow {
+    override suspend fun getBillsByUserId(id: Long): Flow<DataState<List<Bill>>> = flow {
         emit(DataState.Loading)
         try {
-            val hello = api.sayHello()
-            emit(DataState.Success(hello))
+            val bills = api.getBillsByUserId(id)
+            emit(DataState.Success(bills))
         } catch (e: Exception) {
             emit(DataState.Error(e))
         }

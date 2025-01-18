@@ -27,6 +27,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.hybriddemocracy.R
 import com.example.hybriddemocracy.composables.views.BillItem
+import com.example.hybriddemocracy.data.model.Bill
 import com.example.hybriddemocracy.navigation.Screen
 import com.example.hybriddemocracy.ui.screens.login.LoginViewModel
 import kotlin.random.Random
@@ -39,14 +40,24 @@ fun Home(navController: NavController, email: String) {
     val loginModel: LoginViewModel = hiltViewModel<LoginViewModel>()
     val isLoading by userModel.isLoading.collectAsState()
     val user by userModel.user.collectAsState()
+    val bills by userModel.bills.collectAsState()
 
     Log.d("denys", "email: $email")
     Log.d("denys", "user: $user")
+    Log.d("denys", "bills: $bills")
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(email) {
         userModel.getUserByEmail(email) { //"asd@qwe.com") {
             // Handle the user data
             Log.d("denys", "user: $user")
+        }
+    }
+
+    LaunchedEffect(user) {
+        user?.let {
+            userModel.getBillsByUserId(it.id) {
+                Log.d("denys", "bills: $bills")
+            }
         }
     }
 
@@ -79,21 +90,22 @@ fun Home(navController: NavController, email: String) {
                     .padding(horizontal = 20.dp)
             )
 
-            val bills = listOf("Bill No. ${rndNum()}", "Bill No. ${rndNum()}", "Bill No. ${rndNum()}", "Bill No. ${rndNum()}", "Bill No. ${rndNum()}", "Bill No. ${rndNum()}")
-
-            LazyColumn {
-                items(items = bills) { bill ->
-                    BillItem(
-                        text = bill,
-                        modifier = Modifier
-                            .clickable {
-                                navController.navigate("detail/$bill")
+//            val bills = listOf("Bill No. ${rndNum()}", "Bill No. ${rndNum()}", "Bill No. ${rndNum()}", "Bill No. ${rndNum()}", "Bill No. ${rndNum()}", "Bill No. ${rndNum()}")
+            bills?.let {
+                LazyColumn {
+                    items(items = it) { bill ->
+                        BillItem(
+                            bill = bill,
+                            modifier = Modifier
+                                .clickable {
+                                    navController.navigate("detail/${bill.id}")
 //                            viewModel.getUserById("user_id") { user ->
-                                // Handle the user data
+                                    // Handle the user data
 //                            }
-                            }
-                            .padding(20.dp)
-                    )
+                                }
+                                .padding(20.dp)
+                        )
+                    }
                 }
             }
         }

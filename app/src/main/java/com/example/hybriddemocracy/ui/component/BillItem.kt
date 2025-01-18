@@ -6,35 +6,35 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import com.example.hybriddemocracy.R
+import com.example.hybriddemocracy.data.model.Bill
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.random.Random
 
 @Composable
-fun BillItem(text: String, modifier: Modifier = Modifier) {
+fun BillItem(bill: Bill, modifier: Modifier = Modifier) {
 
-    val innerText by remember { mutableStateOf(text) }
-    val date by remember { mutableStateOf(rndDate()) }
-    val isChecked by remember { mutableStateOf(rndCheck()) }
+    val innerText by remember { mutableStateOf(bill.title) }
+    val date by remember { mutableIntStateOf(bill.date) }
+    val isChecked by remember { mutableStateOf(bill.isVoted) }
 
     Row(
         modifier = modifier
             .fillMaxWidth()
-//            .padding(horizontal = 20.dp)
             .border(
                 BorderStroke(1.dp, colorResource(id = R.color.purple_700)),
                 RoundedCornerShape(4.dp)
@@ -42,15 +42,22 @@ fun BillItem(text: String, modifier: Modifier = Modifier) {
     ) {
         Column(modifier = modifier.align(Alignment.CenterVertically)) {
             Text(text = innerText, modifier = modifier)
-            Text(text = date, modifier = modifier)
+            Text(text = formatDateString(date.toString()), modifier = modifier)
         }
 
         Spacer(modifier = Modifier.weight(1f))
 
-        Checkbox(checked = isChecked, onCheckedChange = {
+        Checkbox(checked = isChecked, modifier = modifier, onCheckedChange = {
 
         })
     }
+}
+
+private fun formatDateString(input: String): String {
+    val inputFormatter = DateTimeFormatter.ofPattern("yyyyMMdd")
+    val outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    val date = LocalDate.parse(input, inputFormatter)
+    return date.format(outputFormatter)
 }
 
 private fun rndCheck(): Boolean = Random.nextBoolean()

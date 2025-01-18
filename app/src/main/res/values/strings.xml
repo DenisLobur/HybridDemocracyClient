@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">HybridDemocracy</string>
+    <string name="app_name">DigitalDemocracy</string>
     <string name="login">Login</string>
     <string name="home">Home</string>
     <string name="detail">Detail</string>

@@ -1,5 +1,6 @@
 package com.example.hybriddemocracy.data.datasource.remote
 
+import com.example.hybriddemocracy.data.model.Bill
 import com.example.hybriddemocracy.data.model.User
 import com.example.hybriddemocracy.data.model.request.AuthRequest
 import com.example.hybriddemocracy.data.model.response.AuthResponse
@@ -14,8 +15,8 @@ interface ApiService {
     @POST("authenticate")
     suspend fun authenticate(@Body request: AuthRequest): AuthResponse
 
-    @GET("hello")
-    suspend fun sayHello(): HelloResponse
+    @GET("bills/pull/{citizenId}")
+    suspend fun getBillsByUserId(@Path("citizenId") citizenId: Long): List<Bill>
 
     @GET("login")
     suspend fun login(email: String, password: String): User

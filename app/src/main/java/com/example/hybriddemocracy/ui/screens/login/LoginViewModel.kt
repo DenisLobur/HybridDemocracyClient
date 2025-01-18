@@ -50,26 +50,6 @@ class LoginViewModel @Inject constructor(private val tokenManager: TokenManager,
         }
     }
 
-    fun sayHello() {
-        viewModelScope.launch {
-            repo.sayHello().onEach {
-                when (it) {
-                    is DataState.Loading -> {
-                        _isLoading.value = true
-                    }
-
-                    is DataState.Success -> {
-                        _isLoading.value = false
-                    }
-
-                    is DataState.Error -> {
-                        _isLoading.value = false
-                    }
-                }
-            }.launchIn(viewModelScope)
-        }
-    }
-
     fun logout() {
         tokenManager.clearToken()
     }

@@ -42,12 +42,12 @@ fun NavGraph(
         composable(
             Screen.Detail.route.plus(Screen.Detail.objectPath),
             arguments = listOf(navArgument(Screen.Detail.objectName) {
-                type = NavType.StringType
+                type = NavType.LongType
             })
         ) { backStackEntry ->
             Detail(
                 navController = navController,
-                billName = backStackEntry.arguments?.getString("billName") ?: ""
+                billId = backStackEntry.arguments?.getLong("billId") ?: 0L
             )
         }
     }

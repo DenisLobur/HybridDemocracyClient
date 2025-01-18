@@ -38,7 +38,7 @@ import androidx.navigation.NavController
 import com.example.hybriddemocracy.R
 
 @Composable
-fun Detail(navController: NavController, billName: String, modifier: Modifier = Modifier) {
+fun Detail(navController: NavController, billId: Long, modifier: Modifier = Modifier) {
     val rating = remember { mutableIntStateOf(0) }
     var feedback by remember { mutableStateOf("") }
     var isInterpreted by remember { mutableStateOf(false) }
@@ -46,7 +46,7 @@ fun Detail(navController: NavController, billName: String, modifier: Modifier = 
 
     Column {
         Text(
-            text = "Details of $billName".uppercase(),
+            text = "Details of $billId".uppercase(),
             style = TextStyle(
                 fontSize = 20.sp,
                 fontFamily = FontFamily.Monospace,
