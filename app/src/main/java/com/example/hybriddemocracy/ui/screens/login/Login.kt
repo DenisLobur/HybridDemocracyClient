@@ -1,6 +1,5 @@
 package com.example.hybriddemocracy.ui.screens.login
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -15,7 +14,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,6 +25,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -41,16 +40,6 @@ fun Login(
 ) {
     val viewModel: LoginViewModel = hiltViewModel<LoginViewModel>()
 
-    val token by viewModel.token.collectAsState()
-//    Log.d("denys", "token: $token")
-    val sayHello by viewModel.sayHello.collectAsState()
-    Log.d("denys", "sayHello: $sayHello")
-
-
-//    if (token != null) {
-//        navController.navigate("home")
-//    }
-
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.Center,
@@ -62,7 +51,7 @@ fun Login(
         val activeScreen = currentRoute(navController)
 
         Text(
-            text = "Welcome to Hybrid Democracy".uppercase(),
+            text = "Welcome to Digital Democracy".uppercase(),
             style = TextStyle(
                 fontSize = 20.sp,
                 fontFamily = FontFamily.Monospace,
@@ -92,6 +81,7 @@ fun Login(
                 passwordText = newText
             },
             placeholder = { Text(text = "Password") },
+            visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 16.dp, start = 20.dp, end = 20.dp, bottom = 16.dp)
@@ -103,13 +93,13 @@ fun Login(
 
         Button(
             onClick = {
-                navController.navigate(Screen.Home.route) {
-                    popUpTo(navController.graph.startDestinationId) {
-                        inclusive = true
+                viewModel.authorize(email = emailText.trim(), password = passwordText.trim()) {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = true
+                        }
                     }
                 }
-//                Log.d("denys", "email: $emailText, password: $passwordText")
-//                viewModel.authorize(email = emailText, password = passwordText)
             },
             colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.purple_700)),
             modifier = Modifier
@@ -136,7 +126,7 @@ fun Login(
             modifier = Modifier
                 .padding(8.dp)
                 .clickable {
-                    viewModel.sayHello()
+                    //viewModel.sayHello()
                 }
         )
     }

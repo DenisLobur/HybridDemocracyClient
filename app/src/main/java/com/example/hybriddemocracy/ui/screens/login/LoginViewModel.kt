@@ -20,13 +20,13 @@ class LoginViewModel @Inject constructor(private val tokenManager: TokenManager,
     private val _token = MutableStateFlow<String?>(null)
     val token: StateFlow<String?> get() = _token.asStateFlow()
 
-    private val _sayHello = MutableStateFlow<String?>(null)
-    val sayHello: StateFlow<String?> get() = _sayHello.asStateFlow()
+    private val _noSuchUser = MutableStateFlow<String?>(null)
+    val noSuchUser: StateFlow<String?> get() = _noSuchUser.asStateFlow()
 
     private val _isLoading = MutableStateFlow<Boolean>(false)
     val isLoading get() = _isLoading.asStateFlow()
 
-    fun authorize(email: String, password: String) {
+    fun authorize(email: String, password: String, onSuccess: () -> Unit) {
         viewModelScope.launch {
             repo.authenticate(email, password).onEach {
                 when (it) {
@@ -36,13 +36,14 @@ class LoginViewModel @Inject constructor(private val tokenManager: TokenManager,
 
                     is DataState.Success -> {
                         val token = it.data.jwt
-                        _token.value = token
                         tokenManager.saveToken(token)
                         _isLoading.value = false
+                        onSuccess()
                     }
 
                     is DataState.Error -> {
                         _isLoading.value = false
+                        _noSuchUser.value = it.exception.message
                     }
                 }
             }.launchIn(viewModelScope)
@@ -58,7 +59,6 @@ class LoginViewModel @Inject constructor(private val tokenManager: TokenManager,
                     }
 
                     is DataState.Success -> {
-                        _sayHello.value = it.data.message
                         _isLoading.value = false
                     }
 
