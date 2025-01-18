@@ -19,7 +19,7 @@ import com.example.hybriddemocracy.ui.screens.login.Login
 fun NavGraph(
     navController: NavHostController
 ) {
-    NavHost(navController, startDestination = Screen.Login.route) { // Revert to Login.route
+    NavHost(navController, startDestination = Screen.Login.route) { //Screen.Home.route.plus("/asd@qwe.com")) { // Revert to Login.route
         composable(Screen.Login.route) {
             Login(
                 navController = navController,

@@ -32,7 +32,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.hybriddemocracy.R
 import com.example.hybriddemocracy.navigation.Screen
-import com.example.hybriddemocracy.navigation.currentRoute
 
 @Composable
 fun Login(
@@ -47,8 +46,6 @@ fun Login(
     ) {
         var emailText by remember { mutableStateOf("") }
         var passwordText by remember { mutableStateOf("") }
-
-        val activeScreen = currentRoute(navController)
 
         Text(
             text = "Welcome to Digital Democracy".uppercase(),
