@@ -21,9 +21,16 @@ interface ApiService {
     @GET("login")
     suspend fun login(email: String, password: String): User
 
-    @Headers(
-        "Accept: application/json"
-    )
+//    @Headers(
+//        "Accept: application/json"
+//    )
     @GET("citizens/email/{email}")
     suspend fun getUserByEmail(@Path("email") email: String): User
+
+    @GET("bills/bill/{id}")
+    suspend fun getBillById(@Path("id") id: Long): Bill
+
+    @Headers("User-Agent: OpenData")
+    @GET("bills/text/{nreg}")
+    suspend fun getBillTextByNreg(@Path("nreg") nreg: String): String
 }

@@ -34,8 +34,14 @@ class RepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun login(email: String, password: String): Flow<DataState<User>> {
-        TODO("Not yet implemented")
+    override suspend fun getBillById(id: Long): Flow<DataState<Bill>> = flow {
+        emit(DataState.Loading)
+        try {
+            val user = api.getBillById(id)
+            emit(DataState.Success(user))
+        } catch (e: Exception) {
+            emit(DataState.Error(e))
+        }
     }
 
     override suspend fun getUserByEmail(email: String): Flow<DataState<User>> = flow {
@@ -43,6 +49,16 @@ class RepositoryImpl @Inject constructor(
         try {
             val user = api.getUserByEmail(email)
             emit(DataState.Success(user))
+        } catch (e: Exception) {
+            emit(DataState.Error(e))
+        }
+    }
+
+    override suspend fun getBillTextByNreg(nreg: String): Flow<DataState<String>> = flow {
+        emit(DataState.Loading)
+        try {
+            val text = api.getBillTextByNreg(nreg)
+            emit(DataState.Success(text))
         } catch (e: Exception) {
             emit(DataState.Error(e))
         }

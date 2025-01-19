@@ -27,7 +27,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.hybriddemocracy.R
 import com.example.hybriddemocracy.composables.views.BillItem
-import com.example.hybriddemocracy.data.model.Bill
 import com.example.hybriddemocracy.navigation.Screen
 import com.example.hybriddemocracy.ui.screens.login.LoginViewModel
 import kotlin.random.Random
@@ -36,27 +35,23 @@ import kotlin.random.Random
 @Composable
 fun Home(navController: NavController, email: String) {
 
-    val userModel: UserViewModel = hiltViewModel<UserViewModel>()
+    val userModel: HomeViewModel = hiltViewModel<HomeViewModel>()
     val loginModel: LoginViewModel = hiltViewModel<LoginViewModel>()
     val isLoading by userModel.isLoading.collectAsState()
     val user by userModel.user.collectAsState()
     val bills by userModel.bills.collectAsState()
 
-    Log.d("denys", "email: $email")
-    Log.d("denys", "user: $user")
-    Log.d("denys", "bills: $bills")
-
     LaunchedEffect(email) {
-        userModel.getUserByEmail(email) { //"asd@qwe.com") {
+        userModel.getUserByEmail("abc@def.eu") {//email) { //"asd@qwe.com") {
             // Handle the user data
-            Log.d("denys", "user: $user")
+            //Log.d("denys", "user: $user")
         }
     }
 
     LaunchedEffect(user) {
         user?.let {
             userModel.getBillsByUserId(it.id) {
-                Log.d("denys", "bills: $bills")
+                //Log.d("denys", "bills: $bills")
             }
         }
     }

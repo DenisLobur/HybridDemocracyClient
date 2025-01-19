@@ -1,5 +1,6 @@
 package com.example.hybriddemocracy.composables.views
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
@@ -31,6 +32,7 @@ fun BillItem(bill: Bill, modifier: Modifier = Modifier) {
     val innerText by remember { mutableStateOf(bill.title) }
     val date by remember { mutableIntStateOf(bill.date) }
     val isChecked by remember { mutableStateOf(bill.isVoted) }
+//    Log.d("denys", "bill: $bill")
 
     Row(
         modifier = modifier

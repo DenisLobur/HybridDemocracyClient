@@ -20,5 +20,5 @@ sealed class Screen(
 ) {
     object Login : Screen("login")
     object Home : Screen("home", objectName = "email", objectPath = "/{email}")
-    object Detail : Screen("detail", objectName = "bill", objectPath = "/{bill}")
+    object Detail : Screen("detail", objectName = "billId", objectPath = "/{billId}")
 }

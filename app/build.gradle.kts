@@ -58,6 +58,7 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.logging.interceptor)
     implementation(libs.gson)
+    implementation("com.squareup.okhttp3:okhttp:4.9.3")
 
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
