@@ -48,18 +48,20 @@ import okhttp3.Response
 import java.io.IOException
 
 @Composable
-fun Detail(navController: NavController, billId: Long, modifier: Modifier = Modifier) {
+fun Detail(navController: NavController, billId: Long, citizenId: Long, modifier: Modifier = Modifier) {
     var rating by remember { mutableIntStateOf(0) }
     var feedback by remember { mutableStateOf("") }
     var isInterpreted by remember { mutableStateOf(false) }
     var title by remember { mutableStateOf("") }
     var billy: Bill? by remember { mutableStateOf(null) }
-    var mainText by remember { mutableStateOf("") }
+    var longText by remember { mutableStateOf("") }
+    var interpretedText by remember { mutableStateOf("") }
 
     val viewModel: HomeViewModel = hiltViewModel<HomeViewModel>()
+    Log.d("denys", "in details billId: $billId, citizenId: $citizenId")
 
-    LaunchedEffect(billId) {
-        viewModel.getBillById(billId) { bill ->
+    LaunchedEffect(billId, citizenId) {
+        viewModel.getBillById(billId, citizenId) { bill ->
             //Log.d("denys", "bill details: $bill")
             billy = bill
             title = bill.title
@@ -70,8 +72,8 @@ fun Detail(navController: NavController, billId: Long, modifier: Modifier = Modi
 
     LaunchedEffect(billy) {
         viewModel.getBillTextByNreg(billy?.nreg ?: "") { text ->
-            mainText = text
-            Log.d("denys", "mainText: $mainText")
+            longText = text
+            //Log.d("denys", "mainText: $mainText")
         }
 //        mainText = fetchHtml("https://data.rada.gov.ua/laws/show/n0019500-25.txt") ?: ""
 //        Log.d("denys", "mainText: $mainText")
@@ -94,7 +96,7 @@ fun Detail(navController: NavController, billId: Long, modifier: Modifier = Modi
         )
 
         OutlinedTextField(
-            value = mainText,
+            value = longText,
             onValueChange = { newText ->
 
             },
@@ -113,10 +115,11 @@ fun Detail(navController: NavController, billId: Long, modifier: Modifier = Modi
         Button(
             onClick = {
                 //TODO: Interpret with AI
-                isInterpreted = true
-//                viewModel.getUserById("user_id") { user ->
-                    // Handle the user data
-//                }
+                viewModel.summarizeText(longText) { shortText ->
+                    Log.d("denys", "shortText: $shortText")
+                    interpretedText = shortText
+                    isInterpreted = true
+                }
             },
             colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.purple_700)),
             modifier = Modifier
@@ -129,7 +132,7 @@ fun Detail(navController: NavController, billId: Long, modifier: Modifier = Modi
 
         if (isInterpreted) {
             OutlinedTextField(
-                value = "interpretedText",
+                value = interpretedText,
                 onValueChange = { newText ->
 
                 },
@@ -145,8 +148,6 @@ fun Detail(navController: NavController, billId: Long, modifier: Modifier = Modi
                     .verticalScroll(rememberScrollState())
             )
         }
-
-
 
         Row(modifier = Modifier
             .padding(horizontal = 20.dp)
@@ -179,8 +180,16 @@ fun Detail(navController: NavController, billId: Long, modifier: Modifier = Modi
 
         Button(
             onClick = {
-                //TODO: Send feedback to BE
-                //navController.popBackStack()
+                viewModel.vote(billId, citizenId, rating, feedback) { isVoted ->
+                    Log.d("denys", "isVoted: $isVoted")
+                    navController.popBackStack()
+
+//                    viewModel.saveSentiment(billId, citizenId, rating, feedback) { isSaved ->
+//                        Log.d("denys", "isSaved: $isSaved")
+//                        navController.popBackStack()
+//                    }
+                }
+
             },
             colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.purple_700)),
             modifier = Modifier
@@ -190,26 +199,6 @@ fun Detail(navController: NavController, billId: Long, modifier: Modifier = Modi
         ) {
             Text(text = "Seend feedback".uppercase())
         }
-    }
-}
-
-fun fetchHtml(url: String): String? {
-    val client = OkHttpClient()
-
-    val request = Request.Builder()
-        .url(url)
-        .build()
-
-    return try {
-        val response: Response = client.newCall(request).execute()
-        if (response.isSuccessful) {
-            response.body?.string()
-        } else {
-            null
-        }
-    } catch (e: IOException) {
-        e.printStackTrace()
-        null
     }
 }
 

@@ -42,7 +42,7 @@ fun Home(navController: NavController, email: String) {
     val bills by userModel.bills.collectAsState()
 
     LaunchedEffect(email) {
-        userModel.getUserByEmail("abc@def.eu") {//email) { //"asd@qwe.com") {
+        userModel.getUserByEmail(email) { //"asd@qwe.com") {
             // Handle the user data
             //Log.d("denys", "user: $user")
         }
@@ -93,7 +93,8 @@ fun Home(navController: NavController, email: String) {
                             bill = bill,
                             modifier = Modifier
                                 .clickable {
-                                    navController.navigate("detail/${bill.id}")
+                                    Log.d("denys", "in home billId: ${bill.id}, citizenId: ${user?.id}")
+                                    navController.navigate("detail/${bill.id}/${user?.id}")
 //                            viewModel.getUserById("user_id") { user ->
                                     // Handle the user data
 //                            }

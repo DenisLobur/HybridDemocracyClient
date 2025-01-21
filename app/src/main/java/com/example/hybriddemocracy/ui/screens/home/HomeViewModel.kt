@@ -2,6 +2,7 @@ package com.example.hybriddemocracy.ui.screens.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.hybriddemocracy.data.datasource.remote.ApiUrl
 import com.example.hybriddemocracy.data.model.Bill
 import com.example.hybriddemocracy.data.model.User
 import com.example.hybriddemocracy.data.repository.RepositoryImpl
@@ -16,11 +17,15 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.RequestBody
 import okhttp3.Response
 import java.io.IOException
 import javax.inject.Inject
+
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(private val repo: RepositoryImpl) : ViewModel() {
@@ -79,9 +84,9 @@ class HomeViewModel @Inject constructor(private val repo: RepositoryImpl) : View
         }
     }
 
-    fun getBillById(id: Long, onSuccess: (bill: Bill) -> Unit) {
+    fun getBillById(billId: Long, citizenId: Long, onSuccess: (bill: Bill) -> Unit) {
         viewModelScope.launch {
-            repo.getBillById(id).onEach {
+            repo.getBillById(billId, citizenId).onEach {
                 when (it) {
                     is DataState.Loading -> {
                         _isLoading.value = true
@@ -100,16 +105,40 @@ class HomeViewModel @Inject constructor(private val repo: RepositoryImpl) : View
         }
     }
 
-    fun getBillTextByNreg(nreg: String, onSuccess: (text: String) -> Unit) {
+    fun vote(billId: Long, citizenId: Long, rating: Int, feedback: String, onSuccess: (isVoted: Boolean) -> Unit) {
         viewModelScope.launch {
-//            repo.getBillTextByNreg(nreg).onEach {
+            repo.voteBill(billId = billId, citizenId = citizenId, rating = rating, feedback = feedback).onEach {
+                when (it) {
+                    is DataState.Loading -> {
+                        _isLoading.value = true
+                    }
+
+                    is DataState.Success -> {
+                        val voted = it.data
+                        onSuccess(voted)
+                    }
+
+                    is DataState.Error -> {
+                        _isLoading.value = false
+                    }
+                }
+            }.launchIn(viewModelScope)
+        }
+    }
+
+    fun summarizeText(longText: String, onSuccess: (summary: String) -> Unit) {
+        viewModelScope.launch {
+            val text = summarizeHtml("http://10.0.2.2:8080/analyze/summarize", longText)
+            onSuccess(text ?: "")
+//            repo.summarizeText(longText).onEach {
 //                when (it) {
 //                    is DataState.Loading -> {
 //                        _isLoading.value = true
 //                    }
 //
 //                    is DataState.Success -> {
-//                        onSuccess(it.data)
+//                        val summary = it.data
+//                        onSuccess(summary)
 //                    }
 //
 //                    is DataState.Error -> {
@@ -117,17 +146,69 @@ class HomeViewModel @Inject constructor(private val repo: RepositoryImpl) : View
 //                    }
 //                }
 //            }.launchIn(viewModelScope)
+        }
+    }
+
+    fun saveSentiment(billId: Long, citizenId: Long, rating: Int, feedback: String, onSuccess: (isSaved: Boolean) -> Unit) {
+        viewModelScope.launch {
+            repo.saveSentiment(billId, citizenId, rating, feedback).onEach {
+                when (it) {
+                    is DataState.Loading -> {
+                        _isLoading.value = true
+                    }
+
+                    is DataState.Success -> {
+                        val saved = it.data
+                        onSuccess(saved)
+                    }
+
+                    is DataState.Error -> {
+                        _isLoading.value = false
+                    }
+                }
+            }.launchIn(viewModelScope)
+        }
+    }
+
+    fun getBillTextByNreg(nreg: String, onSuccess: (text: String) -> Unit) {
+        viewModelScope.launch {
             val text = fetchHtml("https://data.rada.gov.ua/laws/show/$nreg.txt")
             onSuccess(text ?: "")
         }
     }
 
-    fun fetchHtml(url: String): String? = runBlocking {
+    private fun fetchHtml(url: String): String? = runBlocking {
         withContext(Dispatchers.IO) {
             val client = OkHttpClient()
 
             val request = Request.Builder()
                 .url(url)
+                .addHeader("User-Agent", "OpenData")
+                .build()
+
+            try {
+                val response: Response = client.newCall(request).execute()
+                if (response.isSuccessful) {
+                    response.body?.string()
+                } else {
+                    null
+                }
+            } catch (e: IOException) {
+                e.printStackTrace()
+                null
+            }
+
+        }
+    }
+
+    private fun summarizeHtml(url: String, longText: String): String? = runBlocking {
+        withContext(Dispatchers.IO) {
+            val client = OkHttpClient()
+            val mediaType = "text/plain".toMediaTypeOrNull()
+            val body = RequestBody.create(mediaType, longText)
+            val request = Request.Builder()
+                .url(url)
+                .post(body)
                 .addHeader("User-Agent", "OpenData")
                 .build()
 

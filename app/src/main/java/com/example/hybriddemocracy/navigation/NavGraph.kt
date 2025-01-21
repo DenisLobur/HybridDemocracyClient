@@ -19,7 +19,7 @@ import com.example.hybriddemocracy.ui.screens.login.Login
 fun NavGraph(
     navController: NavHostController
 ) {
-    NavHost(navController, startDestination = Screen.Home.route.plus("/asd@qwe.com")) {//Screen.Login.route) { //Screen.Home.route.plus("/asd@qwe.com")) { // Revert to Login.route
+    NavHost(navController, startDestination = Screen.Login.route) { //Screen.Home.route.plus("/asd@qwe.com")) { // Revert to Login.route
         composable(Screen.Login.route) {
             Login(
                 navController = navController,
@@ -40,14 +40,16 @@ fun NavGraph(
             }
         }
         composable(
-            Screen.Detail.route.plus(Screen.Detail.objectPath),
-            arguments = listOf(navArgument(Screen.Detail.objectName) {
-                type = NavType.LongType
-            })
+            route = "detail/{billId}/{citizenId}",
+            arguments = listOf(
+                navArgument("billId") { type = NavType.LongType },
+                navArgument("citizenId") { type = NavType.LongType }
+            )
         ) { backStackEntry ->
             Detail(
                 navController = navController,
-                billId = backStackEntry.arguments?.getLong("billId") ?: 0L
+                billId = backStackEntry.arguments?.getLong("billId") ?: 0L,
+                citizenId = backStackEntry.arguments?.getLong("citizenId") ?: 0L
             )
         }
     }

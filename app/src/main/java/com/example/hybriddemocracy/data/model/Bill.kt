@@ -3,7 +3,7 @@ package com.example.hybriddemocracy.data.model
 import com.google.gson.annotations.SerializedName
 
 data class Bill(
-    @SerializedName("id")
+    @SerializedName("billId")
     val id: Long,
     @SerializedName("title")
     val title: String,
@@ -19,7 +19,5 @@ data class Bill(
     val feedback: String,
     @SerializedName("nreg")
     val nreg: String,
-    @SerializedName("citizenId")
-    val citizenId: Long,
 ) {
 }
