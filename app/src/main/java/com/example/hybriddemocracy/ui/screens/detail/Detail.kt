@@ -42,13 +42,11 @@ import androidx.navigation.NavController
 import com.example.hybriddemocracy.R
 import com.example.hybriddemocracy.data.model.Bill
 import com.example.hybriddemocracy.ui.screens.home.HomeViewModel
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
-import java.io.IOException
 
 @Composable
 fun Detail(navController: NavController, billId: Long, citizenId: Long, modifier: Modifier = Modifier) {
+    val viewModel: HomeViewModel = hiltViewModel<HomeViewModel>()
+
     var rating by remember { mutableIntStateOf(0) }
     var feedback by remember { mutableStateOf("") }
     var isInterpreted by remember { mutableStateOf(false) }
@@ -57,12 +55,8 @@ fun Detail(navController: NavController, billId: Long, citizenId: Long, modifier
     var longText by remember { mutableStateOf("") }
     var interpretedText by remember { mutableStateOf("") }
 
-    val viewModel: HomeViewModel = hiltViewModel<HomeViewModel>()
-    Log.d("denys", "in details billId: $billId, citizenId: $citizenId")
-
     LaunchedEffect(billId, citizenId) {
         viewModel.getBillById(billId, citizenId) { bill ->
-            //Log.d("denys", "bill details: $bill")
             billy = bill
             title = bill.title
             rating = bill.rating
@@ -73,12 +67,8 @@ fun Detail(navController: NavController, billId: Long, citizenId: Long, modifier
     LaunchedEffect(billy) {
         viewModel.getBillTextByNreg(billy?.nreg ?: "") { text ->
             longText = text
-            //Log.d("denys", "mainText: $mainText")
         }
-//        mainText = fetchHtml("https://data.rada.gov.ua/laws/show/n0019500-25.txt") ?: ""
-//        Log.d("denys", "mainText: $mainText")
     }
-
 
     Column {
         Text(
@@ -114,7 +104,6 @@ fun Detail(navController: NavController, billId: Long, citizenId: Long, modifier
 
         Button(
             onClick = {
-                //TODO: Interpret with AI
                 viewModel.summarizeText(longText) { shortText ->
                     Log.d("denys", "shortText: $shortText")
                     interpretedText = shortText
@@ -149,9 +138,11 @@ fun Detail(navController: NavController, billId: Long, citizenId: Long, modifier
             )
         }
 
-        Row(modifier = Modifier
-            .padding(horizontal = 20.dp)
-            .align(Alignment.CenterHorizontally)) {
+        Row(
+            modifier = Modifier
+                .padding(horizontal = 20.dp)
+                .align(Alignment.CenterHorizontally)
+        ) {
             for (i in 1..5) {
                 IconButton(onClick = { rating = i }) {
                     Icon(
@@ -181,7 +172,6 @@ fun Detail(navController: NavController, billId: Long, citizenId: Long, modifier
         Button(
             onClick = {
                 viewModel.vote(billId, citizenId, rating, feedback) { isVoted ->
-                    Log.d("denys", "isVoted: $isVoted")
                     navController.popBackStack()
 
 //                    viewModel.saveSentiment(billId, citizenId, rating, feedback) { isSaved ->
@@ -201,11 +191,3 @@ fun Detail(navController: NavController, billId: Long, citizenId: Long, modifier
         }
     }
 }
-
-//private val mainText: String = "Запроваджено оновлену інформаційну взаємодію між ЄДР та ДПС з використанням засобів системи «Трембіта»\n" +
-//        "\n" +
-//        "Відповідно до наказу Міністерства юстиції України та Міністерства фінансів України від 05.07.2024  № 2040/5/327 «Про електронну інформаційну взаємодію між Єдиним державним реєстром юридичних осіб, фізичних осіб - підприємців та громадських формувань й інформаційними системами Державної податкової служби України», зареєстрований в Міністерстві юстиції України 09.07.2024 № 1026/42371, 09.12.2024 запроваджено оновлену інформаційну взаємодію між Єдиним державним реєстром юридичних осіб, фізичних осіб - підприємців та громадських формувань й інформаційними системами Державної податкової служби України з використанням засобів системи електронної взаємодії державних електронних інформаційних ресурсів «Трембіта»."
-//
-//private val interpretedText = "- Оновлено інформаційну взаємодію між ЄДР та ДПС з використанням системи «Трембіта».\n" +
-//        "- Відповідно до наказу Міністерства юстиції та Міністерства фінансів України від 05.07.2024, зареєстрованого 09.07.2024.\n" +
-//        "- Впроваджено 09.12.2024 для покращення електронної взаємодії між інформаційними системами ЄДР та ДПС."

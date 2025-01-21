@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.hybriddemocracy.R
 import com.example.hybriddemocracy.data.model.Bill
 import java.time.LocalDate
@@ -31,8 +32,6 @@ fun BillItem(bill: Bill, modifier: Modifier = Modifier) {
 
     val innerText by remember { mutableStateOf(bill.title) }
     val date by remember { mutableIntStateOf(bill.date) }
-    val isChecked by remember { mutableStateOf(bill.isVoted) }
-//    Log.d("denys", "bill: $bill")
 
     Row(
         modifier = modifier
@@ -44,14 +43,13 @@ fun BillItem(bill: Bill, modifier: Modifier = Modifier) {
     ) {
         Column(modifier = modifier.align(Alignment.CenterVertically)) {
             Text(text = innerText, modifier = modifier)
-            Text(text = formatDateString(date.toString()), modifier = modifier)
+
+            Row {
+                Text(text = formatDateString(date.toString()), modifier = modifier)
+                Spacer(modifier = modifier.weight(1f))
+                Text(text = bill.nreg, color = colorResource(id = R.color.purple_700), fontSize = 16.sp,modifier = modifier)
+            }
         }
-
-        Spacer(modifier = Modifier.weight(1f))
-
-        Checkbox(checked = isChecked, modifier = modifier, onCheckedChange = {
-
-        })
     }
 }
 
