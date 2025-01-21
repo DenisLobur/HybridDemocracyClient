@@ -2,11 +2,11 @@ package com.example.hybriddemocracy.ui.screens.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.hybriddemocracy.data.datasource.remote.ApiUrl
 import com.example.hybriddemocracy.data.model.Bill
 import com.example.hybriddemocracy.data.model.User
 import com.example.hybriddemocracy.data.repository.RepositoryImpl
 import com.example.hybriddemocracy.utils.network.DataState
+import com.example.hybriddemocracy.utils.security.TokenManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -28,7 +27,10 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val repo: RepositoryImpl) : ViewModel() {
+class HomeViewModel @Inject constructor(
+    private val tokenManager: TokenManager,
+    private val repo: RepositoryImpl
+) : ViewModel() {
 
     private val _user = MutableStateFlow<User?>(null)
     val user: StateFlow<User?> get() = _user.asStateFlow()
@@ -128,24 +130,8 @@ class HomeViewModel @Inject constructor(private val repo: RepositoryImpl) : View
 
     fun summarizeText(longText: String, onSuccess: (summary: String) -> Unit) {
         viewModelScope.launch {
-            val text = summarizeHtml("http://10.0.2.2:8080/analyze/summarize", longText)
-            onSuccess(text ?: "")
-//            repo.summarizeText(longText).onEach {
-//                when (it) {
-//                    is DataState.Loading -> {
-//                        _isLoading.value = true
-//                    }
-//
-//                    is DataState.Success -> {
-//                        val summary = it.data
-//                        onSuccess(summary)
-//                    }
-//
-//                    is DataState.Error -> {
-//                        _isLoading.value = false
-//                    }
-//                }
-//            }.launchIn(viewModelScope)
+            val text = summarizeHtml(longText)
+            onSuccess(text ?: "Can not summarize")
         }
     }
 
@@ -201,15 +187,16 @@ class HomeViewModel @Inject constructor(private val repo: RepositoryImpl) : View
         }
     }
 
-    private fun summarizeHtml(url: String, longText: String): String? = runBlocking {
+    private fun summarizeHtml(longText: String): String? = runBlocking {
         withContext(Dispatchers.IO) {
             val client = OkHttpClient()
             val mediaType = "text/plain".toMediaTypeOrNull()
             val body = RequestBody.create(mediaType, longText)
             val request = Request.Builder()
-                .url(url)
+                .url("http://10.0.2.2:8080/analyze/summarize")
                 .post(body)
                 .addHeader("User-Agent", "OpenData")
+                .addHeader("Authorization", "Bearer ${tokenManager.getToken()}")
                 .build()
 
             try {
@@ -217,7 +204,7 @@ class HomeViewModel @Inject constructor(private val repo: RepositoryImpl) : View
                 if (response.isSuccessful) {
                     response.body?.string()
                 } else {
-                    null
+                    "Response code: " + response.code
                 }
             } catch (e: IOException) {
                 e.printStackTrace()
