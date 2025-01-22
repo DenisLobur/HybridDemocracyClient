@@ -163,8 +163,8 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun fetchHtml(url: String): String? = runBlocking {
-        withContext(Dispatchers.IO) {
+    suspend fun fetchHtml(url: String): String? {
+        return withContext(Dispatchers.IO) {
             val client = OkHttpClient()
 
             val request = Request.Builder()
@@ -183,7 +183,6 @@ class HomeViewModel @Inject constructor(
                 e.printStackTrace()
                 null
             }
-
         }
     }
 
@@ -210,7 +209,6 @@ class HomeViewModel @Inject constructor(
                 e.printStackTrace()
                 null
             }
-
         }
     }
 }

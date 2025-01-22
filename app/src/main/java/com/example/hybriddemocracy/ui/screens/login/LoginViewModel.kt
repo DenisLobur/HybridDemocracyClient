@@ -43,7 +43,7 @@ class LoginViewModel @Inject constructor(private val tokenManager: TokenManager,
 
                     is DataState.Error -> {
                         _isLoading.value = false
-                        _noSuchUser.value = it.exception.message
+                        _noSuchUser.value = "No such user ${email}"
                     }
                 }
             }.launchIn(viewModelScope)

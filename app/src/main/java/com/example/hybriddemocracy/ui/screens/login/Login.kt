@@ -1,5 +1,6 @@
 package com.example.hybriddemocracy.ui.screens.login
 
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -14,12 +15,15 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -32,12 +36,22 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.hybriddemocracy.R
 import com.example.hybriddemocracy.navigation.Screen
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 
 @Composable
 fun Login(
     navController: NavController
 ) {
     val viewModel: LoginViewModel = hiltViewModel<LoginViewModel>()
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val noSuchUser by viewModel.noSuchUser.collectAsState()
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = noSuchUser) {
+        noSuchUser?.let {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+        }
+    }
 
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -90,6 +104,8 @@ fun Login(
 
         Button(
             onClick = {
+                keyboardController?.hide()
+
                 viewModel.authorize(email = emailText.trim(), password = passwordText.trim()) {
                     navController.navigate(Screen.Home.route.plus("/$emailText")) {
                         popUpTo(navController.graph.startDestinationId) {

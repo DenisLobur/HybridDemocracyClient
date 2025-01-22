@@ -19,6 +19,7 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -70,8 +71,10 @@ fun Detail(navController: NavController, billId: Long, citizenId: Long, modifier
     }
 
     LaunchedEffect(billy) {
-        viewModel.getBillTextByNreg(billy?.nreg ?: "") { text ->
-            longText = text
+        billy?.let {
+            viewModel.getBillTextByNreg(it.nreg) { text ->
+                longText = text
+            }
         }
     }
 
@@ -108,7 +111,7 @@ fun Detail(navController: NavController, billId: Long, citizenId: Long, modifier
             )
 
             OutlinedTextField(
-                value = longText,
+                value = if (longText.isEmpty()) "Loading bill..." else longText,
                 onValueChange = { newText ->
 
                 },

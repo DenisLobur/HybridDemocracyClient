@@ -40,7 +40,9 @@ object NetworkModule {
      */
     @Singleton
     @Provides
-    fun provideOkHttpClient(tokenManager: TokenManager): OkHttpClient {
+    fun provideOkHttpClient(
+        tokenManager: TokenManager,
+        loggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
         val okHttpClient = OkHttpClient().newBuilder()
 
         okHttpClient.callTimeout(40, TimeUnit.SECONDS)
@@ -48,6 +50,7 @@ object NetworkModule {
         okHttpClient.readTimeout(40, TimeUnit.SECONDS)
         okHttpClient.writeTimeout(40, TimeUnit.SECONDS)
         okHttpClient.addInterceptor(AuthInterceptor(tokenManager))
+        okHttpClient.addInterceptor(loggingInterceptor)
         okHttpClient.build()
         return okHttpClient.build()
     }
